@@ -10,6 +10,10 @@ app.use("/static", express.static(path.join(__dirname, "./static/")));
 const setTime = require("./functions/time/setTime.js")
 
 let status = 0
+let level = 120
+let trigger = 100
+let onTime = 20.35
+let offTime = 23.30
 
 
 let PORT = Number(process.env.PORT || 80);
