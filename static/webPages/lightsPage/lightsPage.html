@@ -6,12 +6,14 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>const socket = io()</script>
     <script src="static/webPages/lightsPage/scripts/toggle.js"></script>
+    <script src="static/webPages/lightsPage/scripts/socketMessages.js"></script>
+    <script>socketMessages(socket)</script>
 <link rel="icon" href="data:,">
 <!--<meta http-equiv="refresh" content="10"> -->
 </head>
 <body>
 <h1>LightSwitch Operations page</h1>
-<h3>Status: </h3>
+<h3 id="status">Status: OFF</h3>
 <br>
 <p>Current Level:    Trigger@: </p>
 <p>Current Hour: </p><br>

@@ -24,5 +24,8 @@ io.on("connection",(socket) => {
     socket.on("toggle", () => {
         status = status ^ 1
         console.log(status)
+        app.set('title',status)
+        if(status){socket.emit("statusChange","ON");}
+        else{socket.emit("statusChange","OFF");}
     })
 })
