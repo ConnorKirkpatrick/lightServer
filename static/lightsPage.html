@@ -2,28 +2,27 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="static/lightsPageStyle.css">
 <link rel="icon" href="data:,">
-<meta http-equiv="refresh" content="10">
-<style>html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}
-.button { background-color: #195B6A; border: none; color: white; padding: 16px 40px;text-decoration:
-none; font-size: 30px; margin: 2px; cursor: pointer;}</style></head>
-<body style="background-color:powderblue;">
+<!--<meta http-equiv="refresh" content="10"> -->
+</head>
+<body>
 <h1>LightSwitch Operations page</h1>
 <h3>Status: </h3>
 <br>
 <p>Current Level:    Trigger@: </p>
 <p>Current Hour: </p><br>
-//manual on
-<button class="button" type="button" id="toggle">toggle ON/OFF</button>
+<!--manual on -->
+<button class="button button1" type="button" id="toggle">Toggle ON/OFF</button>
 <br><br>
-//set level
+<!--set level -->
 <form action="/base.php" method="get" target="_self">
 <label for="nLevel">New Level:</label>
 <input type="text" id="nLevel" name="nLevel"><br><br>
 <input type="submit" value="Submit (3 digits max)">
 </form>
 <br><br>
-//set on time
+<!-- //set on time -->
 <p>On time: "+(String)OnTime+"</p>
 <form action="/OnTime.php" method="get" target="_self">
 <label for="nOnTime">On Hour:</label>
@@ -31,7 +30,7 @@ none; font-size: 30px; margin: 2px; cursor: pointer;}</style></head>
 <input type="submit" value="Submit (1-24)">
 </form>
 <br><br>
-//set off time
+<!-- //set off time -->
 <p>Off time: "+(String)OffTime+"</p>
 <form action="/OffTime.php" method="get" target="_self">
 <label for="nOffTime">Off Hour:</label>
