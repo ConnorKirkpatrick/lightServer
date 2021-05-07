@@ -29,12 +29,18 @@ app.get("/", (req, res) => {
 io.on("connection",(socket) => {
     setTime(socket)
     startTimer(socket)
+
     socket.on("toggle", () => {
         status = status ^ 1
         console.log(status)
         app.set('title',status)
         if(status){socket.emit("statusChange","ON");}
         else{socket.emit("statusChange","OFF");}
+    })
+
+    socket.on("newTrigger", (newTrigger) => {
+        trigger = newTrigger
+        socket.emit("setTrigger",trigger)
     })
 })
 

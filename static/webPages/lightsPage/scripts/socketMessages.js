@@ -6,8 +6,11 @@ function socketMessages(socket){
     })
 
     socket.on("Time",(newTime) => {
-        console.log(newTime)
         document.getElementById("time").innerText = "Current time: " + newTime
+    })
+
+    socket.on("setTrigger",(trigger) => {
+        document.getElementById("trigger").innerText = "Trigger @: " + trigger
     })
 }
 

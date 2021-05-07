@@ -6,6 +6,7 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>const socket = io()</script>
     <script src="static/webPages/lightsPage/scripts/toggle.js"></script>
+    <script src="static/webPages/lightsPage/scripts/newLevelClicked.js"></script>
     <script src="static/webPages/lightsPage/scripts/socketMessages.js"></script>
     <script>socketMessages(socket)</script>
 <link rel="icon" href="data:,">
@@ -15,16 +16,18 @@
 <h1>LightSwitch Operations page</h1>
 <h3 id="status">Status: OFF</h3>
 <br>
-<p>Current Level:    Trigger@: </p>
+<p id="cLevel">Current Level:</p>
+<p id="trigger">Trigger@: </p>
+<br>
 <p id="time">Current Time: </p><br>
 <!--manual on -->
 <button class="button button1" type="button" id="toggle" onclick=toggle(socket)>Toggle ON/OFF</button>
-<br><br>
+<br><br><br>
 <!--set level -->
-<form action="/base.php" method="get" target="_self">
-<label for="nLevel">New Level:</label>
-<input type="text" id="nLevel" name="nLevel"><br><br>
-<input type="submit" value="Submit (3 digits max)">
+<form>
+<label for="newLevel">New Level:</label>
+<input type="text" id="newLevel" name="newLevel"><br><br>
+    <button type="button" class="button1" id="newLevelButton" onclick=newLevelClicked()>Set new Level</button>
 </form>
 <br><br>
 <!-- //set on time -->
