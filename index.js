@@ -11,6 +11,7 @@ const pug = require("pug")
 app.set("view engine","pug")
 app.set("views","./static/views")
 
+const getTime = require("./functions/time/getTime")
 const setTime = require("./functions/time/setTime.js")
 
 let status = 0
@@ -26,13 +27,21 @@ http.listen(PORT, () => {
 });
 
 app.get("/", (req, res) => {
-    res.render('lightsPage',{status: "Status: Testing"})
+    let options = {
+        status: "Status: " + status,
+        currentLevel: "Current Level: " + level,
+        trigger: "Trigger @: " + trigger,
+        time: "Current Time: " + getTime(),
+        onTime: "On Time: " + onTime,
+        offTime: "Off Time: " + offTime
+    }
+    res.render('lightsPage',options)
     //res.sendFile(__dirname + "/static/webPages/lightsPage/lightsPage.html");
 });
 
 
 io.on("connection",(socket) => {
-    setTime(socket)
+    //setTime(socket)
     startTimer(socket)
 
     socket.on("toggle", () => {

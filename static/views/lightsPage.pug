@@ -17,10 +17,10 @@ head
 h1 LightSwitch Operations page
 h3#status= status
 br
-p#cLevel Current Level:
-p#trigger Trigger@:
+p#cLevel= currentLevel
+p#trigger= trigger
 br
-p#time Current Time:
+p#time= time
 br
 // manual on
 button#toggle.button.button1(type='button' onclick='toggle(socket)') Toggle ON/OFF
@@ -36,7 +36,7 @@ button#newLevelButton.button1(type='button' onclick='newLevelClicked()') Set new
 br
 br
 // //set on time
-p#onTime On time:
+p#onTime= onTime
 label(for='newOnTime') On Hour:
 input#newOnTime(type='text' name='newOnTime' onsubmit='newTimeOn()')
 br
@@ -45,7 +45,7 @@ button#newOnTimeButton.button1(type='button' onclick='newTimeOn()') Set new time
 br
 br
 // //set off time
-p#offTime Off time:
+p#offTime= offTime
 label(for='newOffTime') Off Hour:
 input#newOffTime(type='text' name='newOffTime' onsubmit='newTimeOff()')
 br
