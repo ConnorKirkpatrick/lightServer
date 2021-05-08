@@ -13,16 +13,3 @@ function newLevelClicked(){
 
 module.exports = newLevelClicked
 
-/*
-    let strData = newLvl.value;
-    let data = strData.split(".")
-    data[0] = parseInt(data[0])
-    data[1] = parseInt(data[1])
-    if((data[0] >= 0 && data[0] < 24) && (data[1] >= 0 && data[1] < 60)) {
-        socket.emit("newTrigger", strData)
-        newLvl.value = ""
-    }
-    else{
-        newLvl.value = "Invalid entry"
-    }
-    */

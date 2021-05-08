@@ -12,6 +12,10 @@ function socketMessages(socket){
     socket.on("setTrigger",(trigger) => {
         document.getElementById("trigger").innerText = "Trigger @: " + trigger
     })
+
+    socket.on("setOnTime",(newOnTime) => {
+        document.getElementById("onTime").innerText = "On Time: " + newOnTime
+    })
 }
 
 module.exports = socketMessages

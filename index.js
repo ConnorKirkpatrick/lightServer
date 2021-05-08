@@ -34,13 +34,18 @@ io.on("connection",(socket) => {
         status = status ^ 1
         console.log(status)
         app.set('title',status)
-        if(status){socket.emit("statusChange","ON");}
-        else{socket.emit("statusChange","OFF");}
+        if(status){socket.emit("statusChange","ON")}
+        else{socket.emit("statusChange","OFF")}
     })
 
     socket.on("newTrigger", (newTrigger) => {
         trigger = newTrigger
         socket.emit("setTrigger",trigger)
+    })
+
+    socket.on("newOnTime",(time) => {
+        onTime = time
+        socket.emit("setOnTime",(time))
     })
 })
 

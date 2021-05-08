@@ -7,6 +7,7 @@
     <script>const socket = io()</script>
     <script src="static/webPages/lightsPage/scripts/toggle.js"></script>
     <script src="static/webPages/lightsPage/scripts/newLevelClicked.js"></script>
+    <script src="static/webPages/lightsPage/scripts/newTimeOn.js"></script>
     <script src="static/webPages/lightsPage/scripts/socketMessages.js"></script>
     <script>socketMessages(socket)</script>
 <link rel="icon" href="data:,">
@@ -31,11 +32,11 @@
 </form>
 <br><br>
 <!-- //set on time -->
-<p>On time: "+(String)OnTime+"</p>
-<form action="/OnTime.php" method="get" target="_self">
-<label for="nOnTime">On Hour:</label>
-<input type="text" id="nOnTime" name="nOnTime"><br><br>
-<input type="submit" value="Submit (1-24)">
+<p id="onTime">On time: </p>
+<form>
+<label for="newOnTime">On Hour:</label>
+<input type="text" id="newOnTime" name="newOnTime"><br><br>
+    <button type="button" class="button1" id="newOnTimeButton" onclick=newTimeOn()>Set new time on</button>
 </form>
 <br><br>
 <!-- //set off time -->
