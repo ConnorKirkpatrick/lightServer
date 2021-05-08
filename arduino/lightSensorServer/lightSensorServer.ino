@@ -49,10 +49,16 @@ void setup() {
 void loop() {
     WiFiClient client = server.available(); 
     if (client) {                             
-        Serial.println("New Client.");          
-        client.stop();
-        Serial.println("Client disconnected.");
-        Serial.println("");
+        Serial.println("New Client.");
+        while(client){
+          String message = client.readString();    // receives the message from the client
+          if(message != ""){
+            Serial.print("From client: "); Serial.println(message);
+            client.print("I recived: " + message); 
+            client.flush();
+          }
+        }
+        Serial.println("Client Disconnected");
     }
 }
 
@@ -60,7 +66,7 @@ void SetupNet(){
   //seting up private net for use
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
-    Serial.print("Attempting to connect to: "+String(ssid));
+    Serial.println("Attempting to connect to: "+String(ssid));
     delay(2000);
   }
   Serial.println("\nConnected");
@@ -69,6 +75,8 @@ void SetupNet(){
   Serial.print("Gateway: "); Serial.println(WiFi.gatewayIP());
   Serial.print("SSID: "); Serial.println(WiFi.SSID());
   Serial.print("Signal: "); Serial.println(WiFi.RSSI());
+  Serial.print("Networks: "); Serial.println(WiFi.scanNetworks());
+
 }
 
 

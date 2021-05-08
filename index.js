@@ -32,7 +32,11 @@ if(status === 1){strStatus = "ON"}
 else{strStatus = "OFF"}
 let ip = sysData.IP
 
-connection()
+let connector = new connection()
+connector.sendMessage("This is a test")
+connector.getMesaage((data) =>{
+    console.log("Data: " + data)
+})
 
 
 let PORT = Number(process.env.PORT || 80);
