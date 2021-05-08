@@ -16,6 +16,10 @@ function socketMessages(socket){
     socket.on("setOnTime",(newOnTime) => {
         document.getElementById("onTime").innerText = "On Time: " + newOnTime
     })
+
+    socket.on("setOffTime",(newOffTime) => {
+        document.getElementById("offTime").innerText = "Off Time: " + newOffTime
+    })
 }
 
 module.exports = socketMessages

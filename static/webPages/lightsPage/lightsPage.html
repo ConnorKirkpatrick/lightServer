@@ -8,6 +8,7 @@
     <script src="static/webPages/lightsPage/scripts/toggle.js"></script>
     <script src="static/webPages/lightsPage/scripts/newLevelClicked.js"></script>
     <script src="static/webPages/lightsPage/scripts/newTimeOn.js"></script>
+    <script src="static/webPages/lightsPage/scripts/newTimeOff.js"></script>
     <script src="static/webPages/lightsPage/scripts/socketMessages.js"></script>
     <script>socketMessages(socket)</script>
 <link rel="icon" href="data:,">
@@ -40,11 +41,11 @@
 </form>
 <br><br>
 <!-- //set off time -->
-<p>Off time: "+(String)OffTime+"</p>
-<form action="/OffTime.php" method="get" target="_self">
-<label for="nOffTime">Off Hour:</label>
-<input type="text" id="nOffTime" name="nOffTime"><br><br>
-<input type="submit" value="Submit (1-24)">
+<p id="offTime">Off time: </p>
+<form>
+<label for="newOffTime">Off Hour:</label>
+<input type="text" id="newOffTime" name="newOffTime"><br><br>
+    <button type="button" class="button1" id="newOffTimeButton" onclick=newTimeOff()>Set new time off</button>
 </form><br><br>
 
 

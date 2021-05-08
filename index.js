@@ -47,6 +47,11 @@ io.on("connection",(socket) => {
         onTime = time
         socket.emit("setOnTime",(time))
     })
+
+    socket.on("newOffTime",(time) => {
+        offTime = time
+        socket.emit("setOffTime",(time))
+    })
 })
 
 function startTimer(socket){
