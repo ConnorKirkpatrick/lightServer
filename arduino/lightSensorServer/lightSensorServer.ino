@@ -36,7 +36,11 @@ void setup() {
   Serial.begin(9600);
   pinMode(LedPin,OUTPUT);
   digitalWrite(LedPin, HIGH);
+  
   pinMode(OutputPin, OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, HIGH);
+  
   pinMode(ldrPin, INPUT);
 
    
@@ -52,11 +56,21 @@ void loop() {
         Serial.println("New Client.");
         while(client){
           String message = client.readString();    // receives the message from the client
-          if(message != ""){
+          if(message == "ON"){
+            digitalWrite(LED_BUILTIN, LOW);
+          }
+          
+          if(message == "OFF"){
+            digitalWrite(LED_BUILTIN, HIGH);
+          }
+          
+          if(message == "LEVEL"){
+            
+          }
+          /*
             Serial.print("From client: "); Serial.println(message);
             client.print("I recived: " + message); 
-            client.flush();
-          }
+            client.flush();*/
         }
         Serial.println("Client Disconnected");
     }
@@ -75,7 +89,6 @@ void SetupNet(){
   Serial.print("Gateway: "); Serial.println(WiFi.gatewayIP());
   Serial.print("SSID: "); Serial.println(WiFi.SSID());
   Serial.print("Signal: "); Serial.println(WiFi.RSSI());
-  Serial.print("Networks: "); Serial.println(WiFi.scanNetworks());
 
 }
 

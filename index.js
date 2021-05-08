@@ -33,10 +33,11 @@ else{strStatus = "OFF"}
 let ip = sysData.IP
 
 let connector = new connection()
+/*
 connector.sendMessage("This is a test")
 connector.getMesaage((data) =>{
     console.log("Data: " + data)
-})
+})*/
 
 
 let PORT = Number(process.env.PORT || 80);
@@ -71,8 +72,14 @@ io.on("connection",(socket) => {
         let sysData = getJSON()
         sysData.status = status
         setJSON(JSON.stringify(sysData))
-        if(status){io.sockets.emit("statusChange","ON")}
-        else{io.sockets.emit("statusChange","OFF")}
+        if(status){
+            io.sockets.emit("statusChange","ON")
+            connector.sendMessage("ON")
+        }
+        else{
+            io.sockets.emit("statusChange","OFF")
+            connector.sendMessage("OFF")
+        }
     })
 
     socket.on("newTrigger", (newTrigger) => {
