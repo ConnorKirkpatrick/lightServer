@@ -26,27 +26,22 @@
 <button class="button button1" type="button" id="toggle" onclick=toggle(socket)>Toggle ON/OFF</button>
 <br><br><br>
 <!--set level -->
-<form>
 <label for="newLevel">New Level:</label>
-<input type="text" id="newLevel" name="newLevel"><br><br>
-    <button type="button" class="button1" id="newLevelButton" onclick=newLevelClicked()>Set new Level</button>
-</form>
+<input type="text" id="newLevel" name="newLevel"/><br><br>
+<button type="button" class="button1" id="newLevelButton" onclick=newLevelClicked()>Set new Level</button>
 <br><br>
 <!-- //set on time -->
 <p id="onTime">On time: </p>
-<form>
 <label for="newOnTime">On Hour:</label>
-<input type="text" id="newOnTime" name="newOnTime"><br><br>
-    <button type="button" class="button1" id="newOnTimeButton" onclick=newTimeOn()>Set new time on</button>
-</form>
+<input type="text" id="newOnTime" name="newOnTime" onsubmit=newTimeOn()><br><br>
+<button type="button" class="button1" id="newOnTimeButton" onclick=newTimeOn()>Set new time on</button>
 <br><br>
 <!-- //set off time -->
 <p id="offTime">Off time: </p>
-<form>
 <label for="newOffTime">Off Hour:</label>
-<input type="text" id="newOffTime" name="newOffTime"><br><br>
-    <button type="button" class="button1" id="newOffTimeButton" onclick=newTimeOff()>Set new time off</button>
-</form><br><br>
+<input type="text" id="newOffTime" name="newOffTime" onsubmit="newTimeOff()"><br><br>
+<button type="button" class="button1" id="newOffTimeButton" onclick=newTimeOff()>Set new time off</button>
+<br><br>
 
 
 </body></html>   
