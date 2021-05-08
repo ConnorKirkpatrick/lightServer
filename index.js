@@ -18,6 +18,8 @@ const setTime = require("./functions/time/setTime")
 const getJSON = require("./functions/JSON/getJSON")
 const setJSON = require("./functions/JSON/setJSON")
 
+const connection = require("./functions/sockets/connection")
+
 
 let sysData = getJSON()
 let status = sysData.status
@@ -30,6 +32,7 @@ if(status === 1){strStatus = "ON"}
 else{strStatus = "OFF"}
 let ip = sysData.IP
 
+connection()
 
 
 let PORT = Number(process.env.PORT || 80);
