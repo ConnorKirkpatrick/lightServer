@@ -1,0 +1,24 @@
+doctype html
+head
+    meta(name='viewport' content='width=device-width, initial-scale=1')
+    link(rel='stylesheet' href='static/webPages/lightsPage/lightsPageStyle.css')
+    script(src='/socket.io/socket.io.js')
+    script(src='static/webPages/lightsSettings/scripts/newIP.js')
+    script(src='static/webpages/lightsSettings/scripts/setNewIP.js')
+    script.
+        const socket = io()
+        setNewIP(socket)
+
+
+h1 LightSwitch Settings page
+h3#IP= setIP
+br
+// set level
+label(for='newIP') New IP:
+input#newIP(type='text' name='newIP')
+br
+br
+button#newIPButton.button1(type='button' onclick='newIP()') Set new IP
+br
+br
+

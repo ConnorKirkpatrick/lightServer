@@ -28,6 +28,7 @@ let offTime = sysData.offTime
 let strStatus;
 if(status === 1){strStatus = "ON"}
 else{strStatus = "OFF"}
+let ip = sysData.IP
 
 
 
@@ -46,7 +47,13 @@ app.get("/", (req, res) => {
         offTime: "Off Time: " + offTime
     }
     res.render('lightsPage',options)
-    //res.sendFile(__dirname + "/static/webPages/lightsPage/lightsPage.html");
+});
+
+app.get("/settings", (req, res) => {
+    let options = {
+        setIP: "IP: " + getJSON().IP
+    }
+    res.render('lightsSettings',options)
 });
 
 
@@ -83,6 +90,15 @@ io.on("connection",(socket) => {
         sysData.offTime = offTime
         setJSON(JSON.stringify(sysData))
         io.sockets.emit("setOffTime",(time))
+    })
+
+    socket.on("newIP",(ip) => {
+        console.log(ip)
+        let sysData = getJSON()
+        sysData.IP = ip
+        setJSON(JSON.stringify(sysData))
+        io.sockets.emit("setIP",(ip))
+
     })
 })
 
