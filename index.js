@@ -51,15 +51,14 @@ app.get("/", (req, res) => {
 
 
 io.on("connection",(socket) => {
-    //setTime(socket)
     startTimer(socket)
     socket.on("toggle", () => {
         status = status ^ 1
         let sysData = getJSON()
         sysData.status = status
         setJSON(JSON.stringify(sysData))
-        if(status){socket.emit("statusChange","ON")}
-        else{socket.emit("statusChange","OFF")}
+        if(status){io.sockets.emit("statusChange","ON")}
+        else{io.sockets.emit("statusChange","OFF")}
     })
 
     socket.on("newTrigger", (newTrigger) => {
@@ -67,7 +66,7 @@ io.on("connection",(socket) => {
         let sysData = getJSON()
         sysData.trigger = trigger
         setJSON(JSON.stringify(sysData))
-        socket.emit("setTrigger",trigger)
+        io.sockets.emit("setTrigger",trigger)
     })
 
     socket.on("newOnTime",(time) => {
@@ -75,7 +74,7 @@ io.on("connection",(socket) => {
         let sysData = getJSON()
         sysData.onTime = onTime
         setJSON(JSON.stringify(sysData))
-        socket.emit("setOnTime",(time))
+        io.sockets.emit("setOnTime",(time))
     })
 
     socket.on("newOffTime",(time) => {
@@ -83,7 +82,7 @@ io.on("connection",(socket) => {
         let sysData = getJSON()
         sysData.offTime = offTime
         setJSON(JSON.stringify(sysData))
-        socket.emit("setOffTime",(time))
+        io.sockets.emit("setOffTime",(time))
     })
 })
 
