@@ -11,14 +11,24 @@ const pug = require("pug")
 app.set("view engine","pug")
 app.set("views","./static/views")
 
-const getTime = require("./functions/time/getTime")
-const setTime = require("./functions/time/setTime.js")
+const fs = require("fs")
 
-let status = 0
+const getTime = require("./functions/time/getTime")
+const setTime = require("./functions/time/setTime")
+const getJSON = require("./functions/JSON/getJSON")
+const setJSON = require("./functions/JSON/setJSON")
+
+
+let sysData = getJSON()
+let status = sysData.status
 let level = 120
-let trigger = 100
-let onTime = 20.35
-let offTime = 23.30
+let trigger = sysData.trigger
+let onTime = sysData.onTime
+let offTime = sysData.offTime
+let strStatus;
+if(status === 1){strStatus = "ON"}
+else{strStatus = "OFF"}
+
 
 
 let PORT = Number(process.env.PORT || 80);
@@ -28,7 +38,7 @@ http.listen(PORT, () => {
 
 app.get("/", (req, res) => {
     let options = {
-        status: "Status: " + status,
+        status: "Status: " + strStatus,
         currentLevel: "Current Level: " + level,
         trigger: "Trigger @: " + trigger,
         time: "Current Time: " + getTime(),
@@ -43,27 +53,36 @@ app.get("/", (req, res) => {
 io.on("connection",(socket) => {
     //setTime(socket)
     startTimer(socket)
-
     socket.on("toggle", () => {
         status = status ^ 1
-        console.log(status)
-        app.set('title',status)
+        let sysData = getJSON()
+        sysData.status = status
+        setJSON(JSON.stringify(sysData))
         if(status){socket.emit("statusChange","ON")}
         else{socket.emit("statusChange","OFF")}
     })
 
     socket.on("newTrigger", (newTrigger) => {
         trigger = newTrigger
+        let sysData = getJSON()
+        sysData.trigger = trigger
+        setJSON(JSON.stringify(sysData))
         socket.emit("setTrigger",trigger)
     })
 
     socket.on("newOnTime",(time) => {
         onTime = time
+        let sysData = getJSON()
+        sysData.onTime = onTime
+        setJSON(JSON.stringify(sysData))
         socket.emit("setOnTime",(time))
     })
 
     socket.on("newOffTime",(time) => {
         offTime = time
+        let sysData = getJSON()
+        sysData.offTime = offTime
+        setJSON(JSON.stringify(sysData))
         socket.emit("setOffTime",(time))
     })
 })
