@@ -1,0 +1,55 @@
+doctype html
+head
+    meta(name='viewport' content='width=device-width, initial-scale=1')
+    link(rel='stylesheet' href='static/webPages/lightsPage/lightsPageStyle.css')
+    script(src='/socket.io/socket.io.js')
+    script.
+        const socket = io()
+    script(src='static/webPages/lightsPage/scripts/toggle.js')
+    script(src='static/webPages/lightsPage/scripts/newLevelClicked.js')
+    script(src='static/webPages/lightsPage/scripts/newTimeOn.js')
+    script(src='static/webPages/lightsPage/scripts/newTimeOff.js')
+    script(src='static/webPages/lightsPage/scripts/socketMessages.js')
+    script.
+        socketMessages(socket)
+    link(rel='icon' href='data:,')
+    // <meta http-equiv="refresh" content="10">
+h1 LightSwitch Operations page
+h3#status= status
+br
+p#cLevel Current Level:
+p#trigger Trigger@:
+br
+p#time Current Time:
+br
+// manual on
+button#toggle.button.button1(type='button' onclick='toggle(socket)') Toggle ON/OFF
+br
+br
+br
+// set level
+label(for='newLevel') New Level:
+input#newLevel(type='text' name='newLevel')
+br
+br
+button#newLevelButton.button1(type='button' onclick='newLevelClicked()') Set new Level
+br
+br
+// //set on time
+p#onTime On time:
+label(for='newOnTime') On Hour:
+input#newOnTime(type='text' name='newOnTime' onsubmit='newTimeOn()')
+br
+br
+button#newOnTimeButton.button1(type='button' onclick='newTimeOn()') Set new time on
+br
+br
+// //set off time
+p#offTime Off time:
+label(for='newOffTime') Off Hour:
+input#newOffTime(type='text' name='newOffTime' onsubmit='newTimeOff()')
+br
+br
+button#newOffTimeButton.button1(type='button' onclick='newTimeOff()') Set new time off
+br
+br

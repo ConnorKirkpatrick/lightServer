@@ -7,6 +7,10 @@ const io = require("socket.io")(http);
 const express = require("express")
 app.use("/static", express.static(path.join(__dirname, "./static/")));
 
+const pug = require("pug")
+app.set("view engine","pug")
+app.set("views","./static/views")
+
 const setTime = require("./functions/time/setTime.js")
 
 let status = 0
@@ -22,7 +26,8 @@ http.listen(PORT, () => {
 });
 
 app.get("/", (req, res) => {
-    res.sendFile(__dirname + "/static/webPages/lightsPage/lightsPage.html");
+    res.render('lightsPage',{status: "Status: Testing"})
+    //res.sendFile(__dirname + "/static/webPages/lightsPage/lightsPage.html");
 });
 
 
