@@ -18,8 +18,8 @@ unsigned long currentTime = millis();
 unsigned long previousTime = 0;
 const long timeoutTime = 2000;
 
-WiFiServer server(80);
-AsyncWebServer aServer(85);
+WiFiServer server(85);
+AsyncWebServer aServer(80);
 
 //data for operation of the switch
 const int ldrPin = A0;
@@ -59,7 +59,7 @@ void setup() {
   
 
   aServer.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
-    String message = "Hi! I am the LightsServer.\nWifi: "+WiFi.SSID()+"\nIP: "+WiFi.localIP().toString()+"\nSignal Interference(less is better): "+String(WiFi.RSSI());
+    String message = "Hi! I am the LightsServer.\nWifi: "+WiFi.SSID()+"\nIP: "+WiFi.localIP().toString()+"\nSignal Interference(less is better): "+WiFi.RSSI()+"\n\nhttp://"+WiFi.localIP().toString()+"/update";
     request->send(200, "text/plain", message);
   });
   AsyncElegantOTA.begin(&aServer);    // Start ElegantOTA

@@ -2,7 +2,7 @@ const net = require("net")
 class connection{
     constructor() {
         const clientSocket = new net.Socket()
-        this.connection = clientSocket.connect({port: 80, host:"192.168.0.18"}, function() {
+        this.connection = clientSocket.connect({port: 85, host:"192.168.0.18"}, function() {
             console.log("Connection made")
         })
     }
