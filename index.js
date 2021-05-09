@@ -66,12 +66,10 @@ app.get("/settings", (req, res) => {
     res.render('lightsSettings',options)
 });
 
+statusMonitor(io,connector)
+startTimer(io)
 
 io.on("connection",(socket) => {
-    statusMonitor(io,connector)
-    startTimer(io,socket)
-
-
     socket.on("toggle", () => {
         toggle = toggle ^ 1
         let sysData = getJSON()
@@ -125,11 +123,14 @@ io.on("connection",(socket) => {
     })
 })
 
-function startTimer(io,socket){
+function startTimer(io){
+
     let timer = setInterval(() => {
-        setTime(socket)
+        setTime(io)
         statusMonitor(io, connector)
     }, 60000)
+    return timer
 }
 
-//TODO: Add the toggle flag that ignores time and level
+//TODO: System always turns on upon page refresh, TOGGLE always goes on and then off.
+//TODO: add toggle on/off/auto, adds blanket functionality

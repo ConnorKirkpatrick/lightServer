@@ -1,6 +1,6 @@
 let getTime = require("./getTime")
-function setTime(socket){
-    socket.emit("Time",getTime())
+function setTime(io){
+    io.sockets.emit("Time",getTime())
 }
 
 
