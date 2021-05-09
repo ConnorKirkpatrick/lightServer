@@ -18,6 +18,10 @@ function socketMessages(socket){
     socket.on("setOffTime",(newOffTime) => {
         document.getElementById("offTime").innerText = "Off Time: " + newOffTime
     })
+
+    socket.on("setLevel",(newLevel) => {
+        document.getElementById("cLevel").innerText = "Current Level: " + newLevel
+    })
 }
 
 module.exports = socketMessages

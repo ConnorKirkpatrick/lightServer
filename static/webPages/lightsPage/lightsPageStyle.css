@@ -9,6 +9,7 @@
     transition-duration: 0.4s;
     cursor: pointer;
     background-color: white;
+
 }
 
 .button1 {
@@ -19,6 +20,7 @@
     background-color: #4c4eaf;
     color: white;
 }
+
 html {
     font-family: Helvetica, serif;
     display: inline-block;

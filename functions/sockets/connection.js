@@ -7,11 +7,16 @@ class connection{
         })
     }
     sendMessage(message){
+        message = message+"\n"
+        console.log("Sent: "+message)
         this.connection.write(message)
     }
-    getMesaage(callback){
+
+    getLevel(callback){
+        this.connection.write("LEVEL\n")
+        this.connection.removeAllListeners()
         this.connection.on("data", (data)=>{
-            if(data !== ""){
+            if(data.toString() !== ""){
                 return callback(data.toString())
             }
         })

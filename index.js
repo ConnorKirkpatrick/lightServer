@@ -20,10 +20,12 @@ const setJSON = require("./functions/JSON/setJSON")
 
 const connection = require("./functions/sockets/connection")
 
+const statusMonitor = require("./functions/statusMonitor/statusMonitor")
 
 let sysData = getJSON()
+let toggle = sysData.toggle
 let status = sysData.status
-let level = 120
+let level = sysData.level
 let trigger = sysData.trigger
 let onTime = sysData.onTime
 let offTime = sysData.offTime
@@ -33,12 +35,6 @@ else{strStatus = "OFF"}
 let ip = sysData.IP
 
 let connector = new connection()
-/*
-connector.sendMessage("This is a test")
-connector.getMesaage((data) =>{
-    console.log("Data: " + data)
-})*/
-
 
 let PORT = Number(process.env.PORT || 80);
 http.listen(PORT, () => {
@@ -55,6 +51,12 @@ app.get("/", (req, res) => {
         offTime: "Off Time: " + offTime
     }
     res.render('lightsPage',options)
+    if(status === 1){
+        connector.sendMessage("ON")
+    }
+    else{
+        connector.sendMessage("OFF")
+    }
 });
 
 app.get("/settings", (req, res) => {
@@ -66,19 +68,23 @@ app.get("/settings", (req, res) => {
 
 
 io.on("connection",(socket) => {
-    startTimer(socket)
+    statusMonitor(io,connector)
+    startTimer(io,socket)
+
+
     socket.on("toggle", () => {
-        status = status ^ 1
+        toggle = toggle ^ 1
         let sysData = getJSON()
-        sysData.status = status
+
+        sysData.toggle = toggle
         setJSON(JSON.stringify(sysData))
-        if(status){
-            io.sockets.emit("statusChange","ON")
+        if(toggle){
             connector.sendMessage("ON")
+            statusMonitor(io, connector)
         }
         else{
-            io.sockets.emit("statusChange","OFF")
             connector.sendMessage("OFF")
+            statusMonitor(io, connector)
         }
     })
 
@@ -88,6 +94,7 @@ io.on("connection",(socket) => {
         sysData.trigger = trigger
         setJSON(JSON.stringify(sysData))
         io.sockets.emit("setTrigger",trigger)
+        statusMonitor(io, connector)
     })
 
     socket.on("newOnTime",(time) => {
@@ -96,6 +103,7 @@ io.on("connection",(socket) => {
         sysData.onTime = onTime
         setJSON(JSON.stringify(sysData))
         io.sockets.emit("setOnTime",(time))
+        statusMonitor(io, connector)
     })
 
     socket.on("newOffTime",(time) => {
@@ -104,6 +112,7 @@ io.on("connection",(socket) => {
         sysData.offTime = offTime
         setJSON(JSON.stringify(sysData))
         io.sockets.emit("setOffTime",(time))
+        statusMonitor(io, connector)
     })
 
     socket.on("newIP",(ip) => {
@@ -112,12 +121,15 @@ io.on("connection",(socket) => {
         sysData.IP = ip
         setJSON(JSON.stringify(sysData))
         io.sockets.emit("setIP",(ip))
-
+        statusMonitor(io, connector)
     })
 })
 
-function startTimer(socket){
+function startTimer(io,socket){
     let timer = setInterval(() => {
         setTime(socket)
+        statusMonitor(io, connector)
     }, 60000)
 }
+
+//TODO: Add the toggle flag that ignores time and level

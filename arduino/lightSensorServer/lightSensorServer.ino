@@ -1,5 +1,7 @@
 #include <ESP8266WiFi.h>
-#include<NTPClient.h>
+#include <ESPAsyncTCP.h>
+#include <ESPAsyncWebServer.h>
+#include <AsyncElegantOTA.h>
 
 
 //data for connection to the net for time
@@ -15,7 +17,9 @@ String header;
 unsigned long currentTime = millis();
 unsigned long previousTime = 0;
 const long timeoutTime = 2000;
+
 WiFiServer server(80);
+AsyncWebServer aServer(85);
 
 //data for operation of the switch
 const int ldrPin = A0;
@@ -34,6 +38,9 @@ int currentLightLevel = 0;
 void setup() {
 
   Serial.begin(9600);
+
+  WiFi.mode(WIFI_STA);
+  
   pinMode(LedPin,OUTPUT);
   digitalWrite(LedPin, HIGH);
   
@@ -46,31 +53,45 @@ void setup() {
    
   SetupNet();
   server.begin();
+
+    Serial.print("SSID: "); Serial.println(WiFi.SSID());
+  Serial.print("Signal: "); Serial.println(WiFi.RSSI());
+  
+
+  aServer.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    String message = "Hi! I am the LightsServer.\nWifi: "+WiFi.SSID()+"\nIP: "+WiFi.localIP().toString()+"\nSignal Interference(less is better): "+String(WiFi.RSSI());
+    request->send(200, "text/plain", message);
+  });
+  AsyncElegantOTA.begin(&aServer);    // Start ElegantOTA
+  aServer.begin();
+  Serial.println("HTTP server started");
 }
 
 
 
 void loop() {
+    AsyncElegantOTA.loop();
     WiFiClient client = server.available(); 
     if (client) {                             
         Serial.println("New Client.");
         while(client){
-          String message = client.readString();    // receives the message from the client
+          String message = client.readStringUntil('\n');    // receives the message from the client
           if(message == "ON"){
+            Serial.println("TURNING ON");
             digitalWrite(LED_BUILTIN, LOW);
           }
           
           if(message == "OFF"){
+            Serial.println("TURNING OFF");
             digitalWrite(LED_BUILTIN, HIGH);
           }
           
           if(message == "LEVEL"){
-            
+            Serial.println("GETTING LEVEL");
+            client.print("123");
+            client.flush();
           }
-          /*
-            Serial.print("From client: "); Serial.println(message);
-            client.print("I recived: " + message); 
-            client.flush();*/
+          Serial.println(message);
         }
         Serial.println("Client Disconnected");
     }
