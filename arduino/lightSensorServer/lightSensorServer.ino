@@ -91,7 +91,6 @@ void loop() {
             client.print("123");
             client.flush();
           }
-          Serial.println(message);
         }
         Serial.println("Client Disconnected");
     }
