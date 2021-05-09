@@ -22,6 +22,10 @@ function socketMessages(socket){
     socket.on("setLevel",(newLevel) => {
         document.getElementById("cLevel").innerText = "Current Level: " + newLevel
     })
+
+    socket.on("settingChange",(change) => {
+        document.getElementById("setting").innerText = "Setting: " + change
+    })
 }
 
 module.exports = socketMessages
