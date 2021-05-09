@@ -44,6 +44,7 @@ http.listen(PORT, () => {
 app.get("/", (req, res) => {
     let options = {
         status: "Status: " + strStatus,
+        setting: "Setting: Automatic",
         currentLevel: "Current Level: " + level,
         trigger: "Trigger @: " + trigger,
         time: "Current Time: " + getTime(),
