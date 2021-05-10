@@ -19,52 +19,59 @@ function statusMonitor(io, connection){
         timeOn = parseInt(timeOn.replace(":","."))
         timeOff = parseInt(timeOff.replace(":","."))
 
-        //if toggle is true, set light on
-        //if toggle is false, but time is in params and level < trigger, turn on
-        //when system turns on, set toggle to on, prevents flickering
-        //once on, allow user to toggle off, sets it back to automatic
-        console.log(toggle,status)
-        //toggle on
+        //3 operational modes; ON, OFF, AUTO
+        //if on, set status to ON and switch on the light
+        //if off, set status to OFF and switch off the light
+        //if auto, leave to the time and level functions
+        console.log("Toggle: " + toggle)
+        //ON
         if(toggle === 1){
             connection.sendMessage("ON")
+            io.sockets.emit("statusChange","ON")
             sysData.status = 1
             setJSON(JSON.stringify(sysData))
-            io.sockets.emit("statusChange","ON")
-            console.log("TURNING ON")
             return
         }
 
-        //toggle off
-        if(toggle !== 1){
-            //check params, else set off. Goes back to automatic mode
-            //turning on
-            if(toggle !== 1 && status !== 1 && timeOn <= time && timeOff > time && trigger > level){
+        //OFF
+        else if(toggle === 2){
+            connection.sendMessage("OFF")
+            io.sockets.emit("statusChange","OFF")
+            sysData.status = 0
+            setJSON(JSON.stringify(sysData))
+            return
+        }
+        //AUTO
+        else if(toggle === 0){
+            //auto on
+            if(status !== 1 && timeOn <= time && timeOff > time && trigger > level){
                 connection.sendMessage("ON")
+                io.sockets.emit("statusChange","ON")
                 sysData.status = 1
                 setJSON(JSON.stringify(sysData))
-                console.log("TURNING ON")
                 return
             }
-            //turning off, time is too late
-            if(status === 1 && timeOff <= time){
-                connection.sendMessage("OFF")
-                console.log("TURNING ON")
-                sysData.status = 0
-                setJSON(JSON.stringify(sysData))
-                io.sockets.emit("statusChange","OFF")
-                return
-            }
-            //turning off, time is too early
-            if(status === 1 && timeOn > time){
-                connection.sendMessage("OFF")
+            //auto off; time is too early
+            else if(status === 1 && timeOn > time){
                 console.log("EARLY OFF")
+                connection.sendMessage("OFF")
                 io.sockets.emit("statusChange","OFF")
                 sysData.status = 0
                 setJSON(JSON.stringify(sysData))
                 return
             }
-            if(status === 1 && level > trigger){
-                console.log("LEVEL OFF")
+            //auto off; time is too late
+            else if(status === 1 && timeOff <= time){
+                console.log("LATE OFF")
+                connection.sendMessage("OFF")
+                io.sockets.emit("statusChange","OFF")
+                sysData.status = 0
+                setJSON(JSON.stringify(sysData))
+                return
+            }
+            //auto off; light is not low enough
+            else if(status === 1 && level > trigger){
+                console.log("LEVEL LOW OFF")
                 connection.sendMessage("OFF")
                 io.sockets.emit("statusChange","OFF")
                 sysData.status = 0
@@ -72,9 +79,8 @@ function statusMonitor(io, connection){
                 return
             }
         }
-
-
     })
 }
+//TODO: address flicker issue: light fluctuates by 5-10 points regularly. add a catch to keep the lights on once they are set
 
 module.exports = statusMonitor

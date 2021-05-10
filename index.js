@@ -23,16 +23,22 @@ const connection = require("./functions/sockets/connection")
 const statusMonitor = require("./functions/statusMonitor/statusMonitor")
 
 let sysData = getJSON()
-let toggle = sysData.toggle
+let setting = sysData.toggle
 let status = sysData.status
 let level = sysData.level
 let trigger = sysData.trigger
 let onTime = sysData.onTime
 let offTime = sysData.offTime
+let ip = sysData.IP
+
 let strStatus;
 if(status === 1){strStatus = "ON"}
 else{strStatus = "OFF"}
-let ip = sysData.IP
+let strSetting;
+if(setting === 0){strSetting = "AUTOMATIC"}
+else if(setting === 1){strSetting = "ON"}
+else if(setting === 2){strSetting = "OFF"}
+
 
 let connector = new connection()
 
@@ -44,7 +50,7 @@ http.listen(PORT, () => {
 app.get("/", (req, res) => {
     let options = {
         status: "Status: " + strStatus,
-        setting: "Setting: Automatic",
+        setting: "Setting: " + strSetting,
         currentLevel: "Current Level: " + level,
         trigger: "Trigger @: " + trigger,
         time: "Current Time: " + getTime(),
@@ -67,24 +73,21 @@ app.get("/settings", (req, res) => {
     res.render('lightsSettings',options)
 });
 
-statusMonitor(io,connector)
+//statusMonitor(io,connector)
 startTimer(io)
 
 io.on("connection",(socket) => {
     socket.on("toggle", () => {
-        toggle = toggle ^ 1
+        console.log(setting)
+        setting++
+        if(setting > 2){setting = 0}
         let sysData = getJSON()
-
-        sysData.toggle = toggle
+        sysData.toggle = setting
         setJSON(JSON.stringify(sysData))
-        if(toggle){
-            connector.sendMessage("ON")
-            statusMonitor(io, connector)
-        }
-        else{
-            connector.sendMessage("OFF")
-            statusMonitor(io, connector)
-        }
+        statusMonitor(io, connector)
+        if(setting === 0){io.sockets.emit("settingChange","AUTOMATIC")}
+        else if(setting === 1){io.sockets.emit("settingChange","ON")}
+        else if(setting === 2){io.sockets.emit("settingChange","OFF")}
     })
 
     socket.on("newTrigger", (newTrigger) => {
@@ -129,9 +132,11 @@ function startTimer(io){
     let timer = setInterval(() => {
         setTime(io)
         statusMonitor(io, connector)
-    }, 60000)
+    }, 30000)
     return timer
 }
+
+//TODO: Add a delay, system needs to connect to the arduino before starting anything else
 
 //TODO: System always turns on upon page refresh, TOGGLE always goes on and then off.
 //TODO: add toggle on/off/auto, adds blanket functionality
