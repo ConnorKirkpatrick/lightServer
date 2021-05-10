@@ -83,6 +83,7 @@ io.on("connection",(socket) => {
         if(setting > 2){setting = 0}
         let sysData = getJSON()
         sysData.toggle = setting
+        console.log(sysData.toString())
         setJSON(JSON.stringify(sysData))
         statusMonitor(io, connector)
         if(setting === 0){io.sockets.emit("settingChange","AUTOMATIC")}
@@ -135,8 +136,7 @@ function startTimer(io){
     }, 30000)
     return timer
 }
-
+//TODO: fix the connections connect flag never changing
 //TODO: Add a delay, system needs to connect to the arduino before starting anything else
 
-//TODO: System always turns on upon page refresh, TOGGLE always goes on and then off.
-//TODO: add toggle on/off/auto, adds blanket functionality
+

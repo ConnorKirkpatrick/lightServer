@@ -6,6 +6,7 @@ function statusMonitor(io, connection){
     console.log("Running")
     let time = parseInt(getTime().replace(":","."))
     connection.getLevel((level) => {
+        console.log("Got level")
         let sysData = getJSON()
         let toggle = sysData.toggle
         let status = sysData.status

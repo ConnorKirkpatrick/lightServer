@@ -1,10 +1,23 @@
 const net = require("net")
+const getJSON = require("../JSON/getJSON")
+
 class connection{
     constructor() {
-        const clientSocket = new net.Socket()
-        this.connection = clientSocket.connect({port: 81, host:"192.168.0.18"}, function() {
+        this.clientSocket = new net.Socket()
+        this.connect()
+
+        this.connection.on("close", function(e){
+            console.log("Connection closed: " + e)
+            connection.connect()
+        })
+    }
+    connect(){
+        console.log("Trying to connect")
+        let data = getJSON()
+        this.connection = this.clientSocket.connect({port: 81, host:data.IP}, function() {
             console.log("Connection made")
         })
+
     }
     sendMessage(message){
         message = message+"\n"
@@ -14,7 +27,6 @@ class connection{
 
     getLevel(callback){
         this.connection.write("LEVEL\n")
-        this.connection.removeAllListeners()
         this.connection.on("data", (data)=>{
             if(data.toString() !== ""){
                 return callback(data.toString())
@@ -22,7 +34,6 @@ class connection{
         })
         console.log("SEND REQUEST")
     }
-
 }
 
 
