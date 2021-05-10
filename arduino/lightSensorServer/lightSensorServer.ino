@@ -18,7 +18,7 @@ unsigned long currentTime = millis();
 unsigned long previousTime = 0;
 const long timeoutTime = 2000;
 
-WiFiServer server(85);
+WiFiServer server(81);
 AsyncWebServer aServer(80);
 
 //data for operation of the switch
@@ -54,7 +54,7 @@ void setup() {
   SetupNet();
   server.begin();
 
-    Serial.print("SSID: "); Serial.println(WiFi.SSID());
+  Serial.print("SSID: "); Serial.println(WiFi.SSID());
   Serial.print("Signal: "); Serial.println(WiFi.RSSI());
   
 
