@@ -7,7 +7,6 @@ function statusMonitor(io, connection){
     let time = parseInt(getTime().replace(":","."))
     try {
         connection.getLevel((level) => {
-            console.log("Got level")
             let sysData = getJSON()
             let toggle = sysData.toggle
             let status = sysData.status
@@ -25,7 +24,6 @@ function statusMonitor(io, connection){
             //if on, set status to ON and switch on the light
             //if off, set status to OFF and switch off the light
             //if auto, leave to the time and level functions
-            console.log("Toggle: " + toggle)
             //ON
             if (toggle === 1) {
                 connection.sendMessage("ON")
