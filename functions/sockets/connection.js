@@ -4,19 +4,16 @@ const getJSON = require("../JSON/getJSON")
 class connection{
     constructor() {
         this.clientSocket = new net.Socket()
-        this.connect()
-
-        this.connection.on("close", function(e){
-            console.log("Connection closed: " + e)
-            connection.connect()
-        })
+        this.connection = this.connect()
     }
     connect(){
         console.log("Trying to connect")
+        this.clientSocket.destroy()
         let data = getJSON()
         this.connection = this.clientSocket.connect({port: 81, host:data.IP}, function() {
             console.log("Connection made")
         })
+        return this.connection
 
     }
     sendMessage(message){
@@ -35,27 +32,5 @@ class connection{
         console.log("SEND REQUEST")
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-function connection(){
-    const clientSocket = new net.Socket()
-    let connection = clientSocket.connect({port: 80, host:"192.168.0.18"}, function(){
-        console.log("Connection made")
-        connection.write("This is a test")
-    })
-}*/
 
 module.exports = connection

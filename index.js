@@ -73,7 +73,6 @@ app.get("/settings", (req, res) => {
     res.render('lightsSettings',options)
 });
 
-//statusMonitor(io,connector)
 startTimer(io)
 
 io.on("connection",(socket) => {
@@ -136,7 +135,5 @@ function startTimer(io){
     }, 30000)
     return timer
 }
-//TODO: fix the connections connect flag never changing
-//TODO: Add a delay, system needs to connect to the arduino before starting anything else
 
 
