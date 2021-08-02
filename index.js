@@ -42,6 +42,14 @@ else if(setting === 2){strSetting = "OFF"}
 
 let connector = new connection()
 
+process.on("uncaughtException", function(err) {
+    console.log(err.message)
+    setTimeout(function (){connector = new connection()}, 60000)
+})
+
+
+
+
 let PORT = Number(process.env.PORT || 80);
 http.listen(PORT, () => {
     console.log("Listening on " + PORT);
@@ -129,8 +137,7 @@ io.on("connection",(socket) => {
     })
 })
 
-function startTimer(io){
-
+async function startTimer(io){
     let timer = setInterval(() => {
         setTime(io)
         statusMonitor(io, connector)
