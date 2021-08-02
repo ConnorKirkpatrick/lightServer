@@ -71,12 +71,12 @@ void loop() {
       String message = client.readStringUntil('\n');    // receives the message from the client
       if (message == "ON") {
         Serial.println("TURNING ON");
-        digitalWrite(OutputPin, HIGH);
+        digitalWrite(OutputPin, LOW);
       }
 
       if (message == "OFF") {
         Serial.println("TURNING OFF");
-        digitalWrite(OutputPin, LOW);
+        digitalWrite(OutputPin, HIGH);
       }
 
       if (message == "LEVEL") {

@@ -137,3 +137,7 @@ function startTimer(io){
 }
 
 
+//TODO: Invert on and off
+//TODO: Catch connection error; attempt reconnect after 1 min
+//TODO: AUTO START
+
