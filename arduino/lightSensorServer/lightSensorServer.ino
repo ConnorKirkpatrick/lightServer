@@ -5,8 +5,6 @@
 
 
 //data for connection to the net for time
-//char* ssid = "SKYSAA2U";
-//char* password = "Wwy7QKf37hCN";
 const char* ssid = "Lights";
 const char* password = "jjscd123";
 
@@ -71,12 +69,15 @@ void loop() {
       String message = client.readStringUntil('\n');    // receives the message from the client
       if (message == "ON") {
         Serial.println("TURNING ON");
-        digitalWrite(OutputPin, LOW);
+        digitalWrite(OutputPin, LOW);      
+        client.print("RECIEVED ON");
+        client.flush();
       }
-
       if (message == "OFF") {
         Serial.println("TURNING OFF");
         digitalWrite(OutputPin, HIGH);
+        client.print("RECIEVED OFF");
+        client.flush();
       }
 
       if (message == "LEVEL") {

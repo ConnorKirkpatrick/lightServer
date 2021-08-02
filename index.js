@@ -73,7 +73,9 @@ app.get("/settings", (req, res) => {
     res.render('lightsSettings',options)
 });
 
+
 startTimer(io)
+
 
 io.on("connection",(socket) => {
     socket.on("toggle", () => {
@@ -137,7 +139,10 @@ function startTimer(io){
 }
 
 
-//TODO: Invert on and off
+//TODO: Fix blanket on not working outside of set times
+//TODO: fix memory leak
+//TODO: add arduino response to confirm message
 //TODO: Catch connection error; attempt reconnect after 1 min
 //TODO: AUTO START
+//TODO: Connection status for the webpage
 
