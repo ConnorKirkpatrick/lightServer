@@ -39,12 +39,15 @@ if(setting === 0){strSetting = "AUTOMATIC"}
 else if(setting === 1){strSetting = "ON"}
 else if(setting === 2){strSetting = "OFF"}
 
-
+let reconnectID = null;
 let connector = new connection()
 
 process.on("uncaughtException", function(err) {
     console.log(err.message)
-    setTimeout(function (){connector = new connection()}, 60000)
+    reconnectID = setTimeout(function (){
+        connector = new connection();
+        reconnectID = null; //Clear the ID when the awaited process is run
+        }, 60000)
 })
 
 
@@ -133,6 +136,10 @@ io.on("connection",(socket) => {
         sysData.IP = ip
         setJSON(JSON.stringify(sysData))
         io.sockets.emit("setIP",(ip))
+
+        clearTimeout(reconnectID)
+        connector = new connection();
+
         statusMonitor(io, connector)
     })
 })
@@ -145,11 +152,10 @@ async function startTimer(io){
     return timer
 }
 
-
+//TODO: start reconnect attempt as soon as new IP is entered. Delete the old timer
 //TODO: Fix blanket on not working outside of set times
 //TODO: fix memory leak
 //TODO: add arduino response to confirm message
-//TODO: Catch connection error; attempt reconnect after 1 min
 //TODO: AUTO START
 //TODO: Connection status for the webpage
 

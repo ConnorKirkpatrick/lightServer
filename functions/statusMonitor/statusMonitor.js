@@ -3,7 +3,6 @@ const setJSON = require("../JSON/setJSON");
 const getTime = require("../time/getTime");
 
 function statusMonitor(io, connection){
-    console.log("Running")
     let time = parseInt(getTime().replace(":","."))
     try {
         connection.getLevel((level) => {
