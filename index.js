@@ -17,6 +17,8 @@ const getTime = require("./functions/time/getTime")
 const setTime = require("./functions/time/setTime")
 const getJSON = require("./functions/JSON/getJSON")
 const setJSON = require("./functions/JSON/setJSON")
+const setOn = require("./functions/lightControl/setOn")
+const setOff = require("./functions/lightControl/setOff")
 
 const connection = require("./functions/sockets/connection")
 
@@ -38,6 +40,8 @@ let strSetting;
 if(setting === 0){strSetting = "AUTOMATIC"}
 else if(setting === 1){strSetting = "ON"}
 else if(setting === 2){strSetting = "OFF"}
+
+let timer = null;
 
 let reconnectID = null;
 let connector = new connection()
@@ -70,10 +74,10 @@ app.get("/", (req, res) => {
     }
     res.render('lightsPage',options)
     if(status === 1){
-        connector.sendMessage("ON")
+        setOn(connector,null,null)
     }
-    else{
-        connector.sendMessage("OFF")
+    else if(status === 0){
+        setOff(connector,null,null)
     }
 });
 
@@ -90,17 +94,16 @@ startTimer(io)
 
 io.on("connection",(socket) => {
     socket.on("toggle", () => {
-        console.log(setting)
+        console.log("Setting: " + setting)
         setting++
         if(setting > 2){setting = 0}
         let sysData = getJSON()
         sysData.toggle = setting
-        console.log(sysData.toString())
         setJSON(JSON.stringify(sysData))
-        statusMonitor(io, connector)
         if(setting === 0){io.sockets.emit("settingChange","AUTOMATIC")}
         else if(setting === 1){io.sockets.emit("settingChange","ON")}
         else if(setting === 2){io.sockets.emit("settingChange","OFF")}
+        statusMonitor(io, connector)
     })
 
     socket.on("newTrigger", (newTrigger) => {
@@ -145,17 +148,25 @@ io.on("connection",(socket) => {
 })
 
 async function startTimer(io){
-    let timer = setInterval(() => {
+    timer = setInterval(() => {
         setTime(io)
         statusMonitor(io, connector)
     }, 30000)
-    return timer
 }
 
-//TODO: start reconnect attempt as soon as new IP is entered. Delete the old timer
+function newTimer(io){
+    clearTimeout(timer)
+    startTimer(io)
+}
+
+//TODO: Fix system flooding sensor with requests and answers
+//TODO: add logic to prevent sending redundant messages; dont send off if already off
 //TODO: Fix blanket on not working outside of set times
-//TODO: fix memory leak
+//TODO: fix memory leak; listeners added in status monitor need cleared if a new monitor is started
 //TODO: add arduino response to confirm message
 //TODO: AUTO START
+//TODO: add web console for arduino
+//TODO: add auto-reconnect for arduino if disconnected; Add heartbeat
 //TODO: Connection status for the webpage
+//TODO: add log system to log the light level every hour
 

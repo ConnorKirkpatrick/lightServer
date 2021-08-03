@@ -29,7 +29,13 @@ class connection{
                 return callback(data.toString())
             }
         })
-        console.log("SEND REQUEST")
+    }
+    getMessage(callback){
+        this.connection.on("data", (data)=>{
+            if(data.toString() !== ""){
+                return callback(data.toString())
+            }
+        })
     }
 }
 

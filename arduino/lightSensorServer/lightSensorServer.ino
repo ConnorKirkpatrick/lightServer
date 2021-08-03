@@ -18,6 +18,9 @@ unsigned long currentTime = millis();
 unsigned long previousTime = 0;
 const long timeoutTime = 2000;
 
+String lastReceived = "None";
+String lastSent = "None";
+
 WiFiServer server(81);
 AsyncWebServer aServer(80);
 
@@ -50,7 +53,7 @@ void setup() {
 
 
   aServer.on("/", HTTP_GET, [](AsyncWebServerRequest * request) {
-    String message = "Hi! I am the LightsServer.\nWifi: " + WiFi.SSID() + "\nIP: " + WiFi.localIP().toString() + "\nSignal Interference(less is better): " + WiFi.RSSI() + "\n\nhttp://" + WiFi.localIP().toString() + "/update";
+    String message = "Hi! I am the LightsServer V2.\nWifi: " + WiFi.SSID() + "\nIP: " + WiFi.localIP().toString() + "\nSignal Interference(less is better): " + WiFi.RSSI() + "\n\nhttp://" + WiFi.localIP().toString() + "/update\nLast Received: " + lastReceived + "\nLast Sent: " + lastSent;
     request->send(200, "text/plain", message);
   });
   AsyncElegantOTA.begin(&aServer);    // Start ElegantOTA
@@ -67,23 +70,27 @@ void loop() {
     Serial.println("New Client.");
     while (client) {
       String message = client.readStringUntil('\n');    // receives the message from the client
+      lastReceived = message;
       if (message == "ON") {
         Serial.println("TURNING ON");
         digitalWrite(OutputPin, LOW);      
         client.print("RECIEVED ON");
         client.flush();
+        lastSent = "RECIEVED ON";
       }
       if (message == "OFF") {
         Serial.println("TURNING OFF");
         digitalWrite(OutputPin, HIGH);
         client.print("RECIEVED OFF");
         client.flush();
+        lastSent = "RECIEVED OFF";
       }
 
       if (message == "LEVEL") {
         Serial.println("GETTING LEVEL");
         client.print(getStrLevel());
         client.flush();
+        lastSent = getStrLevel();
       }
     }
     Serial.println("Client Disconnected");
