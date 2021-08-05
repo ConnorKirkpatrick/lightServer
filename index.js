@@ -88,7 +88,7 @@ app.get("/settings", (req, res) => {
     res.render('lightsSettings',options)
 });
 
-
+statusMonitor(io,connector)
 startTimer(io)
 
 
@@ -159,11 +159,8 @@ function newTimer(io){
     startTimer(io)
 }
 
-//TODO: Fix system flooding sensor with requests and answers
-//TODO: add logic to prevent sending redundant messages; dont send off if already off
-//TODO: Fix blanket on not working outside of set times
+//TODO: Check auto function not turning system on
 //TODO: fix memory leak; listeners added in status monitor need cleared if a new monitor is started
-//TODO: add arduino response to confirm message
 //TODO: AUTO START
 //TODO: add web console for arduino
 //TODO: add auto-reconnect for arduino if disconnected; Add heartbeat

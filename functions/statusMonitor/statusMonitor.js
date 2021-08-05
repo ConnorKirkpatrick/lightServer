@@ -14,7 +14,6 @@ function statusMonitor(io, connection){
             let timeOn = sysData.onTime
             let timeOff = sysData.offTime
             let trigger = sysData.trigger
-            console.log("VALUE: "+level)
 
             level = parseInt(level)
             //ERROR caused here, message receives the int rather than text, thus sends another request, starting a loop
@@ -56,7 +55,7 @@ function statusMonitor(io, connection){
                     return
                 }
                 //auto off; time is too early
-                else if (status === 1 && timeOn > time) {
+                else if (status === 1 && timeOn <= time) {
                     console.log("EARLY OFF")
                     setOff(connection,io,sysData)
                     return
