@@ -5,8 +5,10 @@
 
 
 //data for connection to the net for time
-const char* ssid = "Lights";
-const char* password = "jjscd123";
+char* ssid = "SKYSAA2U";
+char* password = "Wwy7QKf37hCN";
+//const char* ssid = "Lights";
+//const char* password = "jjscd123";
 
 IPAddress local_IP(192, 168, 1, 87);
 IPAddress gateway(192, 168, 4, 9);

@@ -1,8 +1,10 @@
 const net = require("net")
 const getJSON = require("../JSON/getJSON")
+const events = require("events")
 
 class connection{
     constructor() {
+        this.emitter = new events.EventEmitter()
         this.clientSocket = new net.Socket()
         this.connection = this.connect()
     }
@@ -18,25 +20,34 @@ class connection{
     }
     sendMessage(message){
         message = message+"\n"
-        console.log("Sent: "+message)
         this.connection.write(message)
+        console.log("Sent: "+message)
+        this.connection.on("data", (data)=>{
+            if(data.toString() !== "" && isNaN(parseInt(data))){
+                //message is text based
+                if (data.includes("RECIEVED OFF")){
+                    this.emitter.emit("TURNED OFF")
+                }
+                else if(data.includes("RECIEVED ON")) {
+                    this.emitter.emit("TURNED ON")
+                }
+            }
+        })
+
     }
 
-    getLevel(callback){
+    getLevel(){
         this.connection.write("LEVEL\n")
         this.connection.on("data", (data)=>{
             if(data.toString() !== ""){
-                return callback(data.toString())
+                data = parseInt(data)
+                if (!isNaN(data)) {
+                    this.emitter.emit("newLevel", data.toString())
+                }
             }
         })
     }
-    getMessage(callback){
-        this.connection.on("data", (data)=>{
-            if(data.toString() !== ""){
-                return callback(data.toString())
-            }
-        })
-    }
+
 }
 
 module.exports = connection
