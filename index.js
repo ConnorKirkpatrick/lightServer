@@ -57,6 +57,8 @@ process.on("uncaughtException", function(err) {
         }, 60000)
     }
     else{
+        console.log(err.message)
+        console.log(err.stack)
         //do nothing, using an error to prevent undesirable listener behaviour
     }
 
@@ -98,7 +100,7 @@ app.get("/settings", (req, res) => {
     res.render('lightsSettings',options)
 });
 
-statusMonitor(io,connector)
+//statusMonitor(io,connector) No run as this always executes before the connection is established
 startTimer(io)
 
 
@@ -113,7 +115,7 @@ io.on("connection",(socket) => {
         if(setting === 0){io.sockets.emit("settingChange","AUTOMATIC")}
         else if(setting === 1){io.sockets.emit("settingChange","ON")}
         else if(setting === 2){io.sockets.emit("settingChange","OFF")}
-        //statusMonitor(io, connector)
+        statusMonitor(io, connector)
     })
 
     socket.on("newTrigger", (newTrigger) => {
@@ -122,7 +124,7 @@ io.on("connection",(socket) => {
         sysData.trigger = trigger
         setJSON(JSON.stringify(sysData))
         io.sockets.emit("setTrigger",trigger)
-        //statusMonitor(io, connector)
+        statusMonitor(io, connector)
     })
 
     socket.on("newOnTime",(time) => {
@@ -131,7 +133,7 @@ io.on("connection",(socket) => {
         sysData.onTime = onTime
         setJSON(JSON.stringify(sysData))
         io.sockets.emit("setOnTime",(time))
-        //statusMonitor(io, connector)
+        statusMonitor(io, connector)
     })
 
     socket.on("newOffTime",(time) => {
@@ -140,7 +142,7 @@ io.on("connection",(socket) => {
         sysData.offTime = offTime
         setJSON(JSON.stringify(sysData))
         io.sockets.emit("setOffTime",(time))
-        //statusMonitor(io, connector)
+        statusMonitor(io, connector)
     })
 
     socket.on("newIP",(ip) => {
@@ -149,22 +151,25 @@ io.on("connection",(socket) => {
         sysData.IP = ip
         setJSON(JSON.stringify(sysData))
         io.sockets.emit("setIP",(ip))
-
         clearTimeout(reconnectID)
         connector = new connection();
-
-        //statusMonitor(io, connector)
+        statusMonitor(io, connector)
     })
 })
 
 async function startTimer(io){
     timer = setInterval(() => {
         setTime(io)
-        connector.getLevel()
+        statusMonitor(io, connector)
     }, 10000)
 }
 
+//TODO: full test of software with new events system
+//TODO: Interval runs, check status
+
+
 //TODO: stop allowing request to send before connection established
+
 //TODO: AUTO START
 //TODO: add web console for arduino
 //TODO: add auto-reconnect for arduino if disconnected; Add heartbeat
