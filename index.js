@@ -25,6 +25,7 @@ const connection = require("./functions/sockets/connection")
 const statusMonitor = require("./functions/statusMonitor/statusMonitor")
 const statusSwitcher = require("./functions/statusSwitching/statusSwitcher")
 
+
 let sysData = getJSON()
 let setting = sysData.toggle
 let status = sysData.status
@@ -68,7 +69,6 @@ process.on("uncaughtException", function(err) {
 
 
 
-
 let PORT = Number(process.env.PORT || 80);
 http.listen(PORT, () => {
     console.log("Listening on " + PORT);
@@ -85,8 +85,6 @@ app.get("/", (req, res) => {
         offTime: "Off Time: " + offTime
     }
     res.render('lightsPage',options)
-    console.log("STATUS: " + status)
-    console.log("SETTING: " + setting)
     if(status === 1){
         setOn(connector,null,null)
     }
@@ -102,9 +100,7 @@ app.get("/settings", (req, res) => {
     res.render('lightsSettings',options)
 });
 
-//statusMonitor(io,connector) No run as this always executes before the connection is established
 startTimer(io)
-
 
 io.on("connection",(socket) => {
     socket.on("toggle", () => {
@@ -170,10 +166,7 @@ async function startTimer(io){
     }, 5000)
 }
 
-//TODO: check webpage desync, refresh should not change the setting
-
-
-//TODO: stop allowing request to send before connection established
+//TODO: connection status variable does not seem localised properly
 
 //TODO: AUTO START
 //TODO: add web console for arduino
