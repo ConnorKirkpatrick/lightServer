@@ -23,6 +23,7 @@ const setOff = require("./functions/lightControl/setOff")
 const connection = require("./functions/sockets/connection")
 
 const statusMonitor = require("./functions/statusMonitor/statusMonitor")
+const statusSwitcher = require("./functions/statusSwitching/statusSwitcher")
 
 let sysData = getJSON()
 let setting = sysData.toggle
@@ -85,6 +86,7 @@ app.get("/", (req, res) => {
     }
     res.render('lightsPage',options)
     console.log("STATUS: " + status)
+    console.log("SETTING: " + setting)
     if(status === 1){
         setOn(connector,null,null)
     }
@@ -115,7 +117,8 @@ io.on("connection",(socket) => {
         if(setting === 0){io.sockets.emit("settingChange","AUTOMATIC")}
         else if(setting === 1){io.sockets.emit("settingChange","ON")}
         else if(setting === 2){io.sockets.emit("settingChange","OFF")}
-        statusMonitor(io, connector)
+        //statusMonitor(io, connector)
+        statusSwitcher(connector, io, sysData, getTime())
     })
 
     socket.on("newTrigger", (newTrigger) => {
@@ -124,7 +127,8 @@ io.on("connection",(socket) => {
         sysData.trigger = trigger
         setJSON(JSON.stringify(sysData))
         io.sockets.emit("setTrigger",trigger)
-        statusMonitor(io, connector)
+        //statusMonitor(io, connector)
+        statusSwitcher(connector, io, sysData, getTime())
     })
 
     socket.on("newOnTime",(time) => {
@@ -133,7 +137,8 @@ io.on("connection",(socket) => {
         sysData.onTime = onTime
         setJSON(JSON.stringify(sysData))
         io.sockets.emit("setOnTime",(time))
-        statusMonitor(io, connector)
+        //statusMonitor(io, connector)
+        statusSwitcher(connector, io, sysData, getTime())
     })
 
     socket.on("newOffTime",(time) => {
@@ -142,7 +147,8 @@ io.on("connection",(socket) => {
         sysData.offTime = offTime
         setJSON(JSON.stringify(sysData))
         io.sockets.emit("setOffTime",(time))
-        statusMonitor(io, connector)
+        //statusMonitor(io, connector)
+        statusSwitcher(connector, io, sysData, getTime())
     })
 
     socket.on("newIP",(ip) => {
@@ -161,11 +167,10 @@ async function startTimer(io){
     timer = setInterval(() => {
         setTime(io)
         statusMonitor(io, connector)
-    }, 10000)
+    }, 5000)
 }
 
-//TODO: full test of software with new events system
-//TODO: Interval runs, check status
+//TODO: check webpage desync, refresh should not change the setting
 
 
 //TODO: stop allowing request to send before connection established

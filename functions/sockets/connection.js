@@ -7,6 +7,7 @@ class connection{
         this.emitter = new events.EventEmitter()
         this.clientSocket = new net.Socket()
         this.connection = this.connect()
+
     }
     connect(){
         console.log("Trying to connect")
@@ -22,7 +23,7 @@ class connection{
         message = message+"\n"
         this.connection.write(message)
         console.log("Sent: "+message)
-        this.connection.on("data", (data)=>{
+        this.connection.once("data", (data)=>{
             if(data.toString() !== "" && isNaN(parseInt(data))){
                 //message is text based
                 if (data.includes("RECIEVED OFF")){
@@ -38,7 +39,7 @@ class connection{
 
     getLevel(){
         this.connection.write("LEVEL\n")
-        this.connection.on("data", (data)=>{
+        this.connection.once("data", (data)=>{
             if(data.toString() !== ""){
                 data = parseInt(data)
                 if (!isNaN(data)) {
@@ -47,6 +48,7 @@ class connection{
             }
         })
     }
+
 
 }
 

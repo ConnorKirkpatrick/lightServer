@@ -37,7 +37,7 @@ function statusSwitcher(connection, io, sysData, time) {
             return
         }
         //auto off; time is too early
-        else if (status === 1 && timeOn <= time) {
+        else if (status === 1 && timeOn >= time) {
             console.log("EARLY OFF")
             setOff(connection, io, sysData)
             return
