@@ -12,6 +12,9 @@ function statusSwitcher(connection, io, sysData, time) {
     timeOn = parseFloat(timeOn.replace(":", "."))
     timeOff = parseFloat(timeOff.replace(":", "."))
 
+    console.log(timeOff)
+    console.log(time)
+
 //3 operational modes; ON, OFF, AUTO
 //if on, set status to ON and switch on the light
 //if off, set status to OFF and switch off the light

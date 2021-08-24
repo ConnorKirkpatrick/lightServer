@@ -1,48 +1,44 @@
 <!DOCTYPE html>
-<html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="static/webPages/lightsPage/lightsPageStyle.css">
     <script src="/socket.io/socket.io.js"></script>
     <script>const socket = io()</script>
+    <script src="static/bower_components/chart.js/dist/chart.js"></script>
     <script src="static/webPages/lightsPage/scripts/toggle.js"></script>
     <script src="static/webPages/lightsPage/scripts/newLevelClicked.js"></script>
     <script src="static/webPages/lightsPage/scripts/newTimeOn.js"></script>
     <script src="static/webPages/lightsPage/scripts/newTimeOff.js"></script>
     <script src="static/webPages/lightsPage/scripts/socketMessages.js"></script>
+    <script src="static/webPages/lightsPage/scripts/graph.js"></script>
     <script>socketMessages(socket)</script>
-<link rel="icon" href="data:,">
-<!--<meta http-equiv="refresh" content="10"> -->
+    <link rel="icon" href="data:,">
+    <!-- <meta http-equiv="refresh" content="10">-->
 </head>
-<body>
 <h1>LightSwitch Operations page</h1>
-<h3 id="status">Status: OFF</h3>
-<br>
-<p id="cLevel">Current Level:</p>
-<p id="trigger">Trigger@: </p>
-<br>
-<p id="time">Current Time: </p><br>
-<!--manual on -->
-<button class="button button1" type="button" id="toggle" onclick=toggle(socket)>Toggle ON/OFF</button>
-<br><br><br>
-<!--set level -->
-<label for="newLevel">New Level:</label>
-<input type="text" id="newLevel" name="newLevel"/><br><br>
-<button type="button" class="button1" id="newLevelButton" onclick=newLevelClicked()>Set new Level</button>
-<br><br>
-<!-- //set on time -->
-<p id="onTime">On time: </p>
-<label for="newOnTime">On Hour:</label>
-<input type="text" id="newOnTime" name="newOnTime" onsubmit=newTimeOn()><br><br>
-<button type="button" class="button1" id="newOnTimeButton" onclick=newTimeOn()>Set new time on</button>
-<br><br>
-<!-- //set off time -->
-<p id="offTime">Off time: </p>
-<label for="newOffTime">Off Hour:</label>
-<input type="text" id="newOffTime" name="newOffTime" onsubmit="newTimeOff()"><br><br>
-<button type="button" class="button1" id="newOffTimeButton" onclick=newTimeOff()>Set new time off</button>
-<br><br>
+<h3 id="status"></h3>
+<p id="setting"></p><br>
+<p id="cLevel"></p>
+<p id="trigger"></p><br>
+<p id="time"></p><br>
+<!-- manual on-->
+<button class="button button1" id="toggle" type="button" onclick="toggle(socket)">Toggle ON/OFF/AUTO</button><br><br><br>
+<!-- set level-->
+<label for="newLevel">New Trigger:</label>
+<input id="newLevel" type="text" name="newLevel"><br><br>
+<button class="button1" id="newLevelButton" type="button" onclick="newLevelClicked()">Set new Level</button><br><br>
+<!-- //set on time-->
+<p id="onTime"></p>
+<label for="newOnTime">On Hour(HH.MM):</label>
+<input id="newOnTime" type="text" name="newOnTime" onsubmit="newTimeOn()"><br><br>
+<button class="button1" id="newOnTimeButton" type="button" onclick="newTimeOn()">Set new time on</button><br><br>
+<!-- //set off time-->
+<p id="offTime"></p>
+<label for="newOffTime">Off Hour(HH.MM):</label>
+<input id="newOffTime" type="text" name="newOffTime" onsubmit="newTimeOff()"><br><br>
+<button class="button1" id="newOffTimeButton" type="button" onclick="newTimeOff()">Set new time off</button><br><br>
+<div class="chartArea">
+    <canvas id="levelsChart" height="400" width="400"></canvas>
+</div>
 
-
-</body></html>   
-
+<script>graph(socket)</script>

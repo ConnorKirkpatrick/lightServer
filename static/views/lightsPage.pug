@@ -1,19 +1,23 @@
 doctype html
+html
 head
-    meta(name='viewport' content='width=device-width, initial-scale=1')
-    link(rel='stylesheet' href='static/webPages/lightsPage/lightsPageStyle.css')
-    script(src='/socket.io/socket.io.js')
-    script.
-        const socket = io()
-    script(src='static/webPages/lightsPage/scripts/toggle.js')
-    script(src='static/webPages/lightsPage/scripts/newLevelClicked.js')
-    script(src='static/webPages/lightsPage/scripts/newTimeOn.js')
-    script(src='static/webPages/lightsPage/scripts/newTimeOff.js')
-    script(src='static/webPages/lightsPage/scripts/socketMessages.js')
-    script.
-        socketMessages(socket)
-    link(rel='icon' href='data:,')
-    // <meta http-equiv="refresh" content="10">
+meta(name='viewport', content='width=device-width, initial-scale=1')
+link(rel='stylesheet', href='static/webPages/lightsPage/lightsPageStyle.css')
+script(src='/socket.io/socket.io.js')
+script.
+    const socket = io()
+script(src='static/bower_components/chart.js/dist/chart.js')
+script(src='static/webPages/lightsPage/scripts/toggle.js')
+script(src='static/webPages/lightsPage/scripts/newLevelClicked.js')
+script(src='static/webPages/lightsPage/scripts/newTimeOn.js')
+script(src='static/webPages/lightsPage/scripts/newTimeOff.js')
+script(src='static/webPages/lightsPage/scripts/socketMessages.js')
+script(src='static/webPages/lightsPage/scripts/graph.js')
+script.
+    socketMessages(socket)
+link(rel='icon', href='data:,')
+// <meta http-equiv="refresh" content="10">
+body
 h1 LightSwitch Operations page
 h3#status= status
 p#setting= setting
@@ -54,3 +58,7 @@ br
 button#newOffTimeButton.button1(type='button' onclick='newTimeOff()') Set new time off
 br
 br
+.chartArea
+    canvas#levelsChart(height='400', width='400')
+script.
+    graph(socket)

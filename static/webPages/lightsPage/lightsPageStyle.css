@@ -34,3 +34,6 @@ body {
 p {
     font-weight: bold;
 }
+.chartArea{
+    background-color: #cdd2d0;
+}

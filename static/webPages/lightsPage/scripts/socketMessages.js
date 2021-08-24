@@ -1,5 +1,6 @@
 function socketMessages(socket){
     socket.on("statusChange", (data) =>{
+        console.log("Change")
         document.getElementById("status").innerText = "Status: "+data
     })
 

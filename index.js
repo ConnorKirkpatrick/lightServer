@@ -3,6 +3,7 @@ const path = require("path");
 const app = require("express")();
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
+const events = require("events");
 
 const express = require("express")
 app.use("/static", express.static(path.join(__dirname, "./static/")));
@@ -24,6 +25,8 @@ const connection = require("./functions/sockets/connection")
 
 const statusMonitor = require("./functions/statusMonitor/statusMonitor")
 const statusSwitcher = require("./functions/statusSwitching/statusSwitcher")
+const addGraphPoints = require("./functions/addGraphPoint/addGraphPoint")
+
 
 
 let sysData = getJSON()
@@ -43,10 +46,15 @@ if(setting === 0){strSetting = "AUTOMATIC"}
 else if(setting === 1){strSetting = "ON"}
 else if(setting === 2){strSetting = "OFF"}
 
+let connected = false;
 let timer = null;
 
+let generalListener = new events.EventEmitter()
+let times = []
+let levels = []
+
 let reconnectID = null;
-let connector = new connection()
+let connector = new connection(generalListener)
 
 process.on("uncaughtException", function(err) {
     if(err.name !== "TypeError"){
@@ -157,20 +165,45 @@ io.on("connection",(socket) => {
         connector = new connection();
         statusMonitor(io, connector)
     })
+
+    socket.on("getChartData", () => {
+        socket.emit("chartData",([times,levels]))
+    })
+})
+
+generalListener.on("newChartData", (data) => {
+    console.log("GOT NEW DATA: " + data)
+    addGraphPoints(times,levels,data[0],data[1])
+})
+
+generalListener.on("disconnected", () => {
+    connected = false
+})
+
+generalListener.on("connected", () =>{
+    connected = true
+})
+
+
+connector.clientSocket.on("connect", () => {
+    connected = true
+    setTime(io)
+    statusMonitor(io, connector, generalListener)
+    io.sockets.emit("chartData",([times,levels]))
 })
 
 async function startTimer(io){
     timer = setInterval(() => {
         setTime(io)
-        statusMonitor(io, connector)
-    }, 5000)
+        if(connected){statusMonitor(io, connector, generalListener)}
+        io.sockets.emit("chartData",([times,levels]))
+    }, 45000)
 }
 
-//TODO: connection status variable does not seem localised properly
-
+//TODO: system connects, no data is sent? check connection item and messaging methods
+//TODO: Fix messages not being sent correctly between webpage and arduino
+//TODO: set chart max size
 //TODO: AUTO START
-//TODO: add web console for arduino
-//TODO: add auto-reconnect for arduino if disconnected; Add heartbeat
-//TODO: Connection status for the webpage
+//TODO: Connection status for the webpage: 0 to -150, -150 is worse. Do 0-50, 51-100, 101-150. "Last updated @*** While ***
 //TODO: add log system to log the light level every hour
 
