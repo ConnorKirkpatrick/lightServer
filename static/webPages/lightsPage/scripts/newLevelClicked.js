@@ -10,6 +10,3 @@ function newLevelClicked(){
         newLvl.value = "Invalid entry, range is 0-1024"
     }
 }
-
-module.exports = newLevelClicked
-

@@ -28,5 +28,3 @@ function socketMessages(socket){
         document.getElementById("setting").innerText = "Setting: " + change
     })
 }
-
-module.exports = socketMessages

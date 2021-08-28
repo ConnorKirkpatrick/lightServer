@@ -14,5 +14,3 @@ function newTimeOff(){
         newTimeOff.value = "Invalid entry"
     }
 }
-
-module.exports = newTimeOff

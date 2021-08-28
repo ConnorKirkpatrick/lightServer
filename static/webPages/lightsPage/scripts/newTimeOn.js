@@ -14,5 +14,3 @@ function newTimeOn(){
         newTimeOn.value = "Invalid entry"
     }
 }
-
-module.exports = newTimeOn
