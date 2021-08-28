@@ -27,27 +27,10 @@ const statusMonitor = require("./functions/statusMonitor/statusMonitor")
 const statusSwitcher = require("./functions/statusSwitching/statusSwitcher")
 const addGraphPoints = require("./functions/addGraphPoint/addGraphPoint")
 
-
-
-let sysData = getJSON()
-let setting = sysData.toggle
-let status = sysData.status
-let level = sysData.level
-let trigger = sysData.trigger
-let onTime = sysData.onTime
-let offTime = sysData.offTime
-let ip = sysData.IP
-
-let strStatus;
-if(status === 1){strStatus = "ON"}
-else{strStatus = "OFF"}
-let strSetting;
-if(setting === 0){strSetting = "AUTOMATIC"}
-else if(setting === 1){strSetting = "ON"}
-else if(setting === 2){strSetting = "OFF"}
-
 let connected = false;
 let timer = null;
+
+let setting = 0
 
 let generalListener = new events.EventEmitter()
 let times = []
@@ -83,6 +66,23 @@ http.listen(PORT, () => {
 });
 
 app.get("/", (req, res) => {
+    let sysData = getJSON()
+    setting = sysData.toggle
+    let status = sysData.status
+    let level = sysData.level
+    let trigger = sysData.trigger
+    let onTime = sysData.onTime
+    let offTime = sysData.offTime
+    let ip = sysData.IP
+
+    let strStatus;
+    if(status === 1){strStatus = "ON"}
+    else{strStatus = "OFF"}
+    let strSetting;
+    if(setting === 0){strSetting = "AUTOMATIC"}
+    else if(setting === 1){strSetting = "ON"}
+    else if(setting === 2){strSetting = "OFF"}
+
     let options = {
         status: "Status: " + strStatus,
         setting: "Setting: " + strSetting,
@@ -126,19 +126,17 @@ io.on("connection",(socket) => {
     })
 
     socket.on("newTrigger", (newTrigger) => {
-        trigger = newTrigger
         let sysData = getJSON()
-        sysData.trigger = trigger
+        sysData.trigger = newTrigger
         setJSON(JSON.stringify(sysData))
-        io.sockets.emit("setTrigger",trigger)
+        io.sockets.emit("setTrigger",newTrigger)
         //statusMonitor(io, connector)
         statusSwitcher(connector, io, sysData, getTime())
     })
 
     socket.on("newOnTime",(time) => {
-        onTime = time
         let sysData = getJSON()
-        sysData.onTime = onTime
+        sysData.onTime = time
         setJSON(JSON.stringify(sysData))
         io.sockets.emit("setOnTime",(time))
         //statusMonitor(io, connector)
@@ -146,9 +144,8 @@ io.on("connection",(socket) => {
     })
 
     socket.on("newOffTime",(time) => {
-        offTime = time
         let sysData = getJSON()
-        sysData.offTime = offTime
+        sysData.offTime = time
         setJSON(JSON.stringify(sysData))
         io.sockets.emit("setOffTime",(time))
         //statusMonitor(io, connector)
@@ -203,7 +200,5 @@ async function startTimer(io){
 //TODO: system connects, no data is sent? check connection item and messaging methods
 //TODO: Fix messages not being sent correctly between webpage and arduino
 //TODO: set chart max size
-//TODO: AUTO START
 //TODO: Connection status for the webpage: 0 to -150, -150 is worse. Do 0-50, 51-100, 101-150. "Last updated @*** While ***
-//TODO: add log system to log the light level every hour
 
