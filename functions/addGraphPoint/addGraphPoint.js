@@ -1,5 +1,5 @@
 function addGraphPoint(times, levels, newTime, newLevel){
-    if(times.count >= 48){
+    if(times.length >= 48){
         times.pop()
         levels.pop()
     }

@@ -1,5 +1,6 @@
 const setOn = require("../lightControl/setOn")
 const setOff = require("../lightControl/setOff")
+const getTime = require("../time/getTime")
 
 function statusSwitcher(connection, io, sysData, time) {
     let Level = sysData.level
@@ -12,9 +13,6 @@ function statusSwitcher(connection, io, sysData, time) {
     timeOn = parseFloat(timeOn.replace(":", "."))
     timeOff = parseFloat(timeOff.replace(":", "."))
 
-    console.log(timeOff)
-    console.log(time)
-
 //3 operational modes; ON, OFF, AUTO
 //if on, set status to ON and switch on the light
 //if off, set status to OFF and switch off the light
@@ -22,13 +20,14 @@ function statusSwitcher(connection, io, sysData, time) {
 
 //ON
     if (toggle === 1 && status !== 1) {
+        console.log("Manual ON @ " + getTime())
         setOn(connection, io, sysData)
         return
     }
 
 //OFF
     else if (toggle === 2 && status !== 0) {
-        console.log("STANDARD OFF")
+        console.log("Manual OFF @ " + getTime())
         setOff(connection, io, sysData)
         return
     }
@@ -36,24 +35,25 @@ function statusSwitcher(connection, io, sysData, time) {
     else if (toggle === 0) {
         //auto on
         if (status !== 1 && timeOn <= time && timeOff > time && trigger > Level) {
+            console.log("Auto ON @ " + getTime())
             setOn(connection, io, sysData)
             return
         }
         //auto off; time is too early
         else if (status === 1 && timeOn >= time) {
-            console.log("EARLY OFF")
+            console.log("EARLY OFF @ " + getTime())
             setOff(connection, io, sysData)
             return
         }
         //auto off; time is too late
         else if (status === 1 && timeOff < time) {
-            console.log("LATE OFF")
+            console.log("LATE OFF @ " + getTime())
             setOff(connection, io, sysData)
             return
         }
         //auto off; light is not low enough
         else if (status === 1 && Level > trigger + 10) {
-            console.log("LEVEL LOW OFF")
+            console.log("LEVEL LOW OFF @ " + getTime())
             setOff(connection, io, sysData)
             return
         }
