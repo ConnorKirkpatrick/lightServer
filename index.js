@@ -170,7 +170,9 @@ io.on("connection",(socket) => {
 
 generalListener.on("newChartData", (data) => {
     console.log("GOT NEW DATA: " + data)
-    addGraphPoints(times,levels,data[0],data[1])
+    addGraphPoints(times,levels,data[0],data[1], io)
+    console.log(times)
+    console.log(levels)
 })
 
 generalListener.on("disconnected", () => {
@@ -192,13 +194,19 @@ connector.clientSocket.on("connect", () => {
 async function startTimer(io){
     timer = setInterval(() => {
         setTime(io)
-        if(connected){statusMonitor(io, connector, generalListener)}
-        io.sockets.emit("chartData",([times,levels]))
+        if(connected){
+            statusMonitor(io, connector, generalListener)
+            io.sockets.emit("chartData",([times,levels]))
+        }
+        else{
+            console.log("No connection")
+            //delete the connection object, then make a new one
+            connector = new connection(generalListener)
+        }
     }, 45000)
 }
 
 //TODO: system connects, no data is sent? check connection item and messaging methods
-//TODO: Fix messages not being sent correctly between webpage and arduino
 //TODO: set chart max size
 //TODO: Connection status for the webpage: 0 to -150, -150 is worse. Do 0-50, 51-100, 101-150. "Last updated @*** While ***
 

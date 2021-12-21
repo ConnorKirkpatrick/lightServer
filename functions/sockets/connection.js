@@ -17,7 +17,6 @@ class connection{
             console.log("Connection made")
         })
         return this.connection
-
     }
     sendMessage(message){
         message = message + "\n"

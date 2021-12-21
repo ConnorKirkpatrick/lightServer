@@ -13,6 +13,7 @@ function statusMonitor(io, connection, generalMonitor) {
         if(time.toString().split(".")[1] === "3" || time.toString().split(".")[1] === undefined) {
             generalMonitor.emit("newChartData", ([time, level]))
         }
+
         let sysData = getJSON()
         level = parseInt(level)
         sysData.level = level
